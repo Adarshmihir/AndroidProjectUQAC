@@ -120,7 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             Log.i("getLocation", location.toString() );
             userLocation = location;
-            
+
             if (userLocation != null) {
 
                 // Add a marker in userLocation and move the camera
