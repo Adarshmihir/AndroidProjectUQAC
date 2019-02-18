@@ -13,8 +13,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         /* Pour tester */
-       // Intent myIntent = new Intent(MainActivity.this, MapsActivity.class);
-        // startActivity(myIntent);
+        Intent myIntent = new Intent(MainActivity.this, MapsActivity.class);
+        startActivity(myIntent);
 
     }
 }
