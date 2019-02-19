@@ -18,7 +18,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -58,6 +63,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        mMap.getUiSettings().setScrollGesturesEnabled(false); // a voir pour autoriser la rotation
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             LoadMapData();
@@ -78,7 +86,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Log.i("PERMISSION LOG", "PERMISSION GRANTED");
 
-        mMap.setMyLocationEnabled(true);
+        //mMap.setMyLocationEnabled(true);
 
         // get the position with custom listener
         mFusedLocationClient.getLastLocation().addOnSuccessListener(getLocationListner);
@@ -125,8 +133,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 // Add a marker in userLocation and move the camera
                 LatLng userLatLng = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(userLatLng).title("Marker in user position"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));
+                //mMap.addMarker(new MarkerOptions().position(userLatLng).icon(BitmapDescriptorFactory.fromAsset("test.png")));
+
+
+                /* Camera settings -> https://stackoverflow.com/questions/38323724/how-does-pok%C3%A8mon-go-uses-custom-google-map-using-google-map-api  */
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(userLatLng)
+                        .zoom(18)
+                        .tilt(0f)
+                        .bearing(0)
+                        .build();
+
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
             }
 
