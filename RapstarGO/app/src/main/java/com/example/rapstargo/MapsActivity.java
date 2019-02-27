@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -13,6 +14,9 @@ import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,15 +28,21 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
-    private Location userLocation;
-    private FusedLocationProviderClient mFusedLocationClient;
+    // permission
     static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 0;
+
+
+    private GoogleMap mMap; // configuration inside the OnMapReady
+    private Location userLocation;
+    private LocationRequest mLocationRequest; // configuration inside the OnCreate
+    private FusedLocationProviderClient mFusedLocationClient; // configuration inside the OnCreate
+    private Marker mUsermarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +50,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        // FusedLocationClient configuration
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+        // Location Request configuration
+        mLocationRequest = LocationRequest.create();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); // need it for GPS usage
+        mLocationRequest.setInterval(5000); // 10 seconds interval maximum
+        mLocationRequest.setSmallestDisplacement(1.f); // need 10 meters movement for update
+
+        // userLocation initialisation
+        userLocation = new Location("");
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -89,8 +108,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //mMap.setMyLocationEnabled(true);
 
         // get the position with custom listener
-        mFusedLocationClient.getLastLocation().addOnSuccessListener(getLocationListner);
-
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null); // Setup interval update
     }
 
     // PERMISSION REQUEST
@@ -119,35 +137,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    /* LISTENER */
+    /* LISTENER / CALLBACK */
 
-    private OnSuccessListener<Location> getLocationListner = new OnSuccessListener<Location>() {
+    private LocationCallback mLocationCallback = new LocationCallback() {
 
         @Override
-        public void onSuccess(Location location) {
+        public void onLocationResult(LocationResult locationResult) {
 
-            Log.i("getLocation", location.toString() );
-            userLocation = location;
+            Log.i("Alexis-LocationCallback", "Interval is called" );
 
-            if (userLocation != null) {
+            if (locationResult != null) {
 
-                // Add a marker in userLocation and move the camera
-                LatLng userLatLng = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
-                //mMap.addMarker(new MarkerOptions().position(userLatLng).icon(BitmapDescriptorFactory.fromAsset("test.png")));
+               Location location = locationResult.getLastLocation();
+
+                if (location != null && (userLocation.getLatitude() != location.getLatitude()
+                    || userLocation.getLongitude() != location.getLongitude()
+                    || userLocation.getAltitude() != location.getAltitude()) ) {
+
+                    Log.i("Alexis-GetLastLocation", location.toString() );
+                    Log.i("Alexis-OldLocation", userLocation.toString() );
+
+                    userLocation = location;
+
+                    // Add a marker in userLocation and move the camera
+                    LatLng userLatLng = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+
+                    if(mUsermarker != null)
+                        mUsermarker.remove();
+
+                    mUsermarker = mMap.addMarker(new MarkerOptions().position(userLatLng).icon(BitmapDescriptorFactory.fromAsset("player.png")));
 
 
-                /* Camera settings -> https://stackoverflow.com/questions/38323724/how-does-pok%C3%A8mon-go-uses-custom-google-map-using-google-map-api  */
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(userLatLng)
-                        .zoom(18)
-                        .tilt(0f)
-                        .bearing(0)
-                        .build();
+                    /* Camera settings -> https://stackoverflow.com/questions/38323724/how-does-pok%C3%A8mon-go-uses-custom-google-map-using-google-map-api  */
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(userLatLng)
+                            .zoom(18)
+                            .tilt(0f)
+                            .bearing(0)
+                            .build();
 
-                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                }
 
             }
-
         }
     };
 
