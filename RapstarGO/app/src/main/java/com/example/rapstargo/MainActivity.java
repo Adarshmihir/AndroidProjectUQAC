@@ -11,10 +11,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+         Intent main = new Intent(MainActivity.this, MainActivity.class);
 
         /* Pour tester */
-       // Intent myIntent = new Intent(MainActivity.this, MapsActivity.class);
-        // startActivity(myIntent);
+        startActivity(main);
 
     }
 }
