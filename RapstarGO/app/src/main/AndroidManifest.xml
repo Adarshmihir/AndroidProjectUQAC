@@ -57,6 +57,11 @@
             android:label="Signin">
         </activity>
 
+        <activity
+            android:name=".SignupActivity"
+            android:label="Signup">
+        </activity>
+
     </application>
 
 </manifest>
