@@ -62,6 +62,11 @@
             android:label="Signup">
         </activity>
 
+        <activity
+            android:name=".HubActivity"
+            android:label="Hub">
+        </activity>
+
     </application>
 
 </manifest>
