@@ -19,7 +19,7 @@ public class MyPlayersAdapter extends RecyclerView.Adapter<MyPlayersAdapter.MyVi
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.lobby_item, parent, false);
+        View view = layoutInflater.inflate(R.layout.player_item, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -41,12 +41,12 @@ public class MyPlayersAdapter extends RecyclerView.Adapter<MyPlayersAdapter.MyVi
             super(itemView);
 
             name = itemView.findViewById(R.id.name);
-            xp = itemView.findViewById(R.id.owner);
+            xp = itemView.findViewById(R.id.xp);
         }
 
         void display(Player player) {
             name.setText(player.getName());
-            xp.setText(player.getXp();
+            xp.setText(player.getXp());
         }
     }
 }

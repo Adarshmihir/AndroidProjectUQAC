@@ -29,7 +29,7 @@
 
         <activity
             android:name=".LobbyActivity"
-            android:label="Hub">
+            android:label="Lobby">
         </activity>
     </application>
 
