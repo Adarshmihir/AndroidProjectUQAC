@@ -40,7 +40,7 @@ public class MyLobbiesAdapter extends RecyclerView.Adapter<MyLobbiesAdapter.MyVi
         MyViewHolder(View itemView) {
             super(itemView);
 
-            name = itemView.findViewById(R.id.name);
+            name = itemView.findViewById(R.id.nameLobby);
             owner = itemView.findViewById(R.id.owner);
         }
 
