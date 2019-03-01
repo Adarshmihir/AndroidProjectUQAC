@@ -40,7 +40,7 @@ public class MyPlayersAdapter extends RecyclerView.Adapter<MyPlayersAdapter.MyVi
         MyViewHolder(View itemView) {
             super(itemView);
 
-            name = itemView.findViewById(R.id.name);
+            name = itemView.findViewById(R.id.namePlayer);
             xp = itemView.findViewById(R.id.xp);
         }
 
