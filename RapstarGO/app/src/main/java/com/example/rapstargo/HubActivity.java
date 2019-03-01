@@ -14,7 +14,7 @@ public class HubActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hub);
 
-        RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
+        RecyclerView mRecyclerView = findViewById(R.id.recyclerViewHub);
 
         List<Lobby> lobbies = new ArrayList<>();
 
