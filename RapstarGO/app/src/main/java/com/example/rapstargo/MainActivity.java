@@ -11,7 +11,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-         Intent lobby = new Intent(MainActivity.this, LobbyActivity.class);
+         Intent createLobby = new Intent(MainActivity.this, CreateLobbyActivity.class);
 
         /* Pour tester */
         startActivity(lobby);
