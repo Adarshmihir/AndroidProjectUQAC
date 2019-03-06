@@ -35,18 +35,18 @@ public class MyPlayersAdapter extends RecyclerView.Adapter<MyPlayersAdapter.MyVi
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
-        private TextView xp;
+        private TextView level;
 
         MyViewHolder(View itemView) {
             super(itemView);
 
-            name = itemView.findViewById(R.id.namePlayer);
-            xp = itemView.findViewById(R.id.xp);
+            name = itemView.findViewById(R.id.playerName);
+            level = itemView.findViewById(R.id.playerLevel);
         }
 
         void display(Player player) {
             name.setText(player.getName());
-            xp.setText(player.getXp());
+            level.setText(player.getLevel());
         }
     }
 }

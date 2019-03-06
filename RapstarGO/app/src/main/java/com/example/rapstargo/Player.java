@@ -2,18 +2,18 @@ package com.example.rapstargo;
 
 public class Player {
     private String name;
-    private int xp;
+    private int level;
 
     Player(String name, int xp) {
         this.name = name;
-        this.xp = xp;
+        this.level = xp;
     }
 
     public String getName() {
         return this.name;
     }
 
-    public int getXp() {
-        return xp;
+    public int getLevel() {
+        return level;
     }
 }

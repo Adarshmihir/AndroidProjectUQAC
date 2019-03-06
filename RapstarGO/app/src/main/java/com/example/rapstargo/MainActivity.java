@@ -15,6 +15,5 @@ public class MainActivity extends AppCompatActivity {
 
         /* Pour tester */
         startActivity(lobby);
-
     }
 }

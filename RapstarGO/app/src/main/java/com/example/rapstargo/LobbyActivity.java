@@ -14,30 +14,46 @@ public class LobbyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
 
-        RecyclerView mRecyclerView = findViewById(R.id.recyclerViewLobby);
+        //TODO: populate lists with API
 
-        List<Player> players = new ArrayList<>();
+        //*****CONNECTED PLAYERS DISPLAY MANAGEMENT*****//
 
-        players.add(new Player("Player1",123));
-        players.add(new Player("Player2",123));
-        players.add(new Player("Player3",123));
-        players.add(new Player("Player4",123));
-        players.add(new Player("Player5",123));
-        players.add(new Player("Player6",123));
-        players.add(new Player("Player7",123));
-        players.add(new Player("Player8",123));
-        players.add(new Player("Player9",123));
-        players.add(new Player("Player10",123));
-        players.add(new Player("Player11",123));
-        players.add(new Player("Player12",123));
-        players.add(new Player("Player13",123));
-        players.add(new Player("Player14",123));
-        players.add(new Player("Player15",123));
+        List<Player> connectedPlayers = new ArrayList<>();
 
-        MyPlayersAdapter adapter = new MyPlayersAdapter(players);
+        //Link activity and layout
+        RecyclerView mRecyclerViewConnectedPlayers = findViewById(R.id.recyclerViewConnectedPlayers);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getParent()));
+        //Hardcoded connected players
+        connectedPlayers.add(new Player("Connected 1",123));
+        connectedPlayers.add(new Player("Connected 2",123));
+        connectedPlayers.add(new Player("Connected 3",123));
+        connectedPlayers.add(new Player("Connected 4",123));
 
-        mRecyclerView.setAdapter(adapter);
+        //Create the adapter for connected players
+        MyPlayersAdapter connectedAdapter = new MyPlayersAdapter(connectedPlayers);
+
+        //Set recyclerViewConnectedPlayers adapter
+        mRecyclerViewConnectedPlayers.setLayoutManager(new LinearLayoutManager(getParent()));
+
+        mRecyclerViewConnectedPlayers.setAdapter(connectedAdapter);
+
+        //*****INVITED PLAYERS DISPLAY MANAGEMENT*****//
+
+        List<Player> invitedPlayers = new ArrayList<>();
+
+        //Link activity and layout
+        RecyclerView mRecyclerViewInvitedPlayers = findViewById(R.id.recyclerViewInvitedPlayers);
+
+        //Hardcoded invited players
+        invitedPlayers.add(new Player("Invited 1", 123));
+        invitedPlayers.add(new Player("Invited 2", 123));
+        invitedPlayers.add(new Player("Invited 3", 123));
+        invitedPlayers.add(new Player("Invited 4", 123));
+
+        //Create the adapter for invited players
+        MyPlayersAdapter invitedAdapter = new MyPlayersAdapter(invitedPlayers);
+
+        //Set recyclerViewInvitedPlayers adapter
+        mRecyclerViewInvitedPlayers.setAdapter(invitedAdapter);
     }
 }
