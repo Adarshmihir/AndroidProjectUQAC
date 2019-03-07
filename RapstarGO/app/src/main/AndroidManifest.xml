@@ -27,6 +27,9 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".CreateLobbyActivity"
+            android:label="Lobby">
+        </activity>
     </application>
-
 </manifest>
