@@ -1,5 +1,6 @@
 package com.example.rapstargo;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,10 +55,14 @@ public class MyPlayersAdapter extends RecyclerView.Adapter<MyPlayersAdapter.MyVi
             level.setText(player.getLevel());
             status.setText(player.getStatus());
 
-            if(status.getText() == "Invited")
+            if(status.getText() == "Invited") {
                 statusProgress.setVisibility(View.VISIBLE);
-            else
+                status.setTextColor(Color.RED);
+            }
+            else {
                 statusProgress.setVisibility(View.INVISIBLE);
+                status.setTextColor(Color.GREEN);
+            }
 
         }
     }
