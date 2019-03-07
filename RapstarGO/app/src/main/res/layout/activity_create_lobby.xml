@@ -22,35 +22,50 @@
         android:layout_marginBottom="50dp"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/lobbyNameLabel"
+        <LinearLayout
+            android:id="@+id/nameVLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="LobbyName"
-            android:textSize="24sp" />
+            android:layout_height="match_parent"
+            android:layout_marginBottom="50dp"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/lobbyNameText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Enter your lobby's name"
-            android:inputType="textPersonName" />
+            <TextView
+                android:id="@+id/lobbyNameLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lobby Name"
+                android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/lobbyPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Lobby Password"
-            android:textSize="24sp" />
+            <EditText
+                android:id="@+id/lobbyNameText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Enter your lobby's name"
+                android:inputType="textPersonName" />
+        </LinearLayout>
 
-        <EditText
-            android:id="@+id/lobbyPassword"
+        <LinearLayout
+            android:id="@+id/passwordVLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Enter your lobby's password"
-            android:inputType="textPassword" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lobbyPasswordLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lobby Password"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/lobbyPasswordText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Enter your lobby's password"
+                android:inputType="textPassword" />
+        </LinearLayout>
 
     </LinearLayout>
 
