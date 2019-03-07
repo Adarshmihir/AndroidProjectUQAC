@@ -14,6 +14,6 @@ public class MainActivity extends AppCompatActivity {
          Intent createLobby = new Intent(MainActivity.this, CreateLobbyActivity.class);
 
         /* Pour tester */
-        startActivity(lobby);
+        startActivity(createLobby);
     }
 }

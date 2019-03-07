@@ -1,6 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-</android.support.constraint.ConstraintLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contentVLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="Create lobby"
+        android:textSize="36sp" />
+
+    <LinearLayout
+        android:id="@+id/formVLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/lobbyNameLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LobbyName"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/lobbyNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Enter your lobby's name"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/lobbyPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lobby Password"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/lobbyPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Enter your lobby's password"
+            android:inputType="textPassword" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/createLobbyButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Lobby" />
+
+</LinearLayout>
