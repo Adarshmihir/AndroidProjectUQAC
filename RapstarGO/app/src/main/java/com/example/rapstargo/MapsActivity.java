@@ -2,6 +2,7 @@ package com.example.rapstargo;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -10,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderApi;
@@ -32,7 +34,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     // permission
     static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 0;
@@ -43,6 +48,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationRequest mLocationRequest; // configuration inside the OnCreate
     private FusedLocationProviderClient mFusedLocationClient; // configuration inside the OnCreate
     private Marker mUsermarker;
+    private List<Hub> mHubList = new ArrayList<Hub>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * This is where we can add markers or lines, add listeners or move the camera.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -82,8 +87,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.getUiSettings().setScrollGesturesEnabled(false); // a voir pour autoriser la rotation
-        mMap.getUiSettings().setZoomControlsEnabled(false);
+        mMap.getUiSettings().setScrollGesturesEnabled(false);
+        mMap.getUiSettings().setZoomGesturesEnabled(false);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setTiltGesturesEnabled(false);
+        mMap.getUiSettings().setIndoorLevelPickerEnabled(false);
+        mMap.getUiSettings().setRotateGesturesEnabled(true);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
@@ -103,13 +112,100 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @SuppressLint("MissingPermission")
     private void LoadMapData() {
 
-        Log.i("PERMISSION LOG", "PERMISSION GRANTED");
+        //Get HubList -> Change for API request
+        mHubList.add(new Hub(new LocationHub(48.4203, -71.0526, 5.0)));
+        mHubList.add(new Hub(new LocationHub(48.4204752, -71.0448095, 5.0)));
 
-        //mMap.setMyLocationEnabled(true);
-
-        // get the position with custom listener
+        //get the position with custom listener
         mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null); // Setup interval update
+
+        //add listener on marker
+        mMap.setOnMarkerClickListener(this);
+
     }
+
+    private void CameraCenterOnPlayer(LatLng pos) {
+
+
+        /* Camera settings -> https://stackoverflow.com/questions/38323724/how-does-pok%C3%A8mon-go-uses-custom-google-map-using-google-map-api  */
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(pos)
+                .zoom(18)
+                .tilt(0)
+                .bearing(0)
+                .build();
+
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+    }
+
+    private void HubMarker() {
+
+        //Place marker for all hubs
+        int nbVisibleHub = 0;
+
+        for (Hub hub : mHubList) {
+
+            Log.i("Alexis-hubForeach", hub.getLocation().toString() );
+
+            LatLng hubPos = new LatLng(hub.getLocation().getLatitude(), hub.getLocation().getLongitude());
+
+            if(mMap.getProjection().getVisibleRegion().latLngBounds.contains(hubPos) && hub.getmMarker() == null) {
+
+                hub.setmMarker(mMap.addMarker(new MarkerOptions().position(hubPos).zIndex(1.0f)));
+                nbVisibleHub++;
+
+            }
+            else if(mMap.getProjection().getVisibleRegion().latLngBounds.contains(hubPos) && hub.getmMarker() != null) {
+                nbVisibleHub++;
+
+            }
+            else if(!mMap.getProjection().getVisibleRegion().latLngBounds.contains(hubPos) && hub.getmMarker() != null) {
+                hub.removeMarker();
+
+            }
+
+        }
+
+        Log.i("Alexis-NbVisibleHub", Integer.toString(nbVisibleHub));
+
+    }
+
+    /* LISTENER / CALLBACK */
+
+    private LocationCallback mLocationCallback = new LocationCallback() {
+
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+
+            if (locationResult != null) {
+
+               Location location = locationResult.getLastLocation();
+
+                if (location != null && (userLocation.getLatitude() != location.getLatitude()
+                    || userLocation.getLongitude() != location.getLongitude()
+                    || userLocation.getAltitude() != location.getAltitude()) ) {
+
+                    Log.i("Alexis-GetLastLocation", location.toString() );
+                    Log.i("Alexis-OldLocation", userLocation.toString() );
+
+                    userLocation = location;
+
+                    // Add a marker in userLocation and move the camera
+                    LatLng userLatLng = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+
+                    if(mUsermarker != null)
+                        mUsermarker.remove();
+
+                    mUsermarker = mMap.addMarker(new MarkerOptions().position(userLatLng).icon(BitmapDescriptorFactory.fromAsset("player.png")).zIndex(.5f));
+
+                    CameraCenterOnPlayer(userLatLng);
+                    HubMarker();
+                }
+
+            }
+        }
+    };
 
     // PERMISSION REQUEST
     @Override
@@ -137,51 +233,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    /* LISTENER / CALLBACK */
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
 
-    private LocationCallback mLocationCallback = new LocationCallback() {
+        if(marker.equals(mUsermarker)){
 
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
+            Log.i("Alexis-MarkerClick", "User marker");
+        }
+        else{
 
-            Log.i("Alexis-LocationCallback", "Interval is called" );
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Do you want join this hub ?");
+            // alert.setMessage("Message");
 
-            if (locationResult != null) {
+            alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
-               Location location = locationResult.getLastLocation();
+                public void onClick(DialogInterface dialog, int whichButton) {
 
-                if (location != null && (userLocation.getLatitude() != location.getLatitude()
-                    || userLocation.getLongitude() != location.getLongitude()
-                    || userLocation.getAltitude() != location.getAltitude()) ) {
-
-                    Log.i("Alexis-GetLastLocation", location.toString() );
-                    Log.i("Alexis-OldLocation", userLocation.toString() );
-
-                    userLocation = location;
-
-                    // Add a marker in userLocation and move the camera
-                    LatLng userLatLng = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
-
-                    if(mUsermarker != null)
-                        mUsermarker.remove();
-
-                    mUsermarker = mMap.addMarker(new MarkerOptions().position(userLatLng).icon(BitmapDescriptorFactory.fromAsset("player.png")));
-
-
-                    /* Camera settings -> https://stackoverflow.com/questions/38323724/how-does-pok%C3%A8mon-go-uses-custom-google-map-using-google-map-api  */
-                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                            .target(userLatLng)
-                            .zoom(18)
-                            .tilt(0f)
-                            .bearing(0)
-                            .build();
-
-                    mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    Log.i("Alexis-MarkerClick", "User join this hub");
 
                 }
 
-            }
-        }
-    };
+            });
 
+            alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int whichButton) {
+
+                            Log.i("Alexis-MarkerClick", "User not joined this hub");
+                            CameraCenterOnPlayer(mUsermarker.getPosition());
+
+                        }
+
+                    });
+
+            alert.show();
+
+        }
+
+        return false;
+    }
 }
