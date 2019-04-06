@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ActivityContainerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@+id/signUpButton"
+    android:layout_alignParentTop="true"
+    android:layout_marginBottom="-74dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/WelcomeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="30dp"
+        android:layout_weight="0"
+        android:gravity="center"
+        android:text="Welcome to RapStarGO"
+        android:textSize="30sp" />
+
+    <LinearLayout
+        android:id="@+id/FieldsContainerVLayout"
+        android:layout_width="match_parent"
+        android:layout_height="336dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/UsernameVLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/UsernameLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/UsernameField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Enter your username"
+                android:inputType="textPersonName"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/PasswordVLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/PasswordLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Password"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/PasswordField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Enter your password"
+                android:inputType="textPassword" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ConfirmPasswordVLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ConfirmPasswordLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Password confirmation"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/ConfirmPasswordField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Enter your password again"
+                android:inputType="textPassword" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/signUpButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="0"
+        android:gravity="center"
+        android:text="Sign up"
+        android:textSize="18sp" />
+
+</LinearLayout>
