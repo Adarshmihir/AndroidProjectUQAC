@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">RapStarGo</string>
     <string name="title_activity_maps">Map</string>
+
+    <string name="Boss_HP">BOSS HP</string>
+    <string name="Player_HP">YOUR HP</string>
+    <string name="imgP1">IMG P1</string>
+    <string name="imgP2">IMG P2</string>
+    <string name="nameP1">NO P1</string>
+    <string name="nameP2">NO P2</string>
+    <string name="Boss">BOSS</string>
 </resources>
