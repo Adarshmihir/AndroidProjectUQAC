@@ -28,8 +28,8 @@
         </activity>
 
         <activity
-            android:name=".SignupActivity"
-            android:label="Signup">
+            android:name=".HubActivity"
+            android:label="Hub">
         </activity>
     </application>
 

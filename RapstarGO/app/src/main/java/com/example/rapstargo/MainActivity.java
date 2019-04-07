@@ -11,10 +11,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent signup = new Intent(MainActivity.this, SignupActivity.class);
+        Intent hub = new Intent(MainActivity.this, HubActivity.class);
 
         /* Pour tester */
-        startActivity(signup);
+        startActivity(hub);
 
     }
 }
