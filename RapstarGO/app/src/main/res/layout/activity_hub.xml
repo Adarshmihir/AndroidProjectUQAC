@@ -15,8 +15,14 @@
         android:text="Avalaible lobbies"
         android:textSize="36sp" />
 
+    <Button
+        android:id="@+id/button_CreateRoom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Room" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewHub"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="584dp" />
 </LinearLayout>

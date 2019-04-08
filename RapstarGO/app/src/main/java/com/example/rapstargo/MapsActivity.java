@@ -3,6 +3,7 @@ package com.example.rapstargo;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -37,7 +38,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, SocketEvent {
 
     // permission
     static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 0;
@@ -55,6 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        SocketManager.getInstance().mCurrentActivity = this;
 
         // FusedLocationClient configuration
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -72,6 +74,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SocketManager.getInstance().mCurrentActivity = this;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SocketManager.getInstance().mCurrentActivity = this;
     }
 
 
@@ -95,9 +109,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setRotateGesturesEnabled(true);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            LoadMapData();
-
+            //LoadMapData();
+            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null); // Setup interval update
+            mMap.setOnMarkerClickListener(this);
+            SocketManager.getInstance().GetAllHubs();
         }
         else {
 
@@ -106,22 +121,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
         }
-
-    }
-
-    @SuppressLint("MissingPermission")
-    private void LoadMapData() {
-
-        //Get HubList -> Change for API request
-        mHubList.add(new Hub(new LocationHub(48.4203, -71.0526, 5.0)));
-        mHubList.add(new Hub(new LocationHub(48.4204752, -71.0448095, 5.0)));
-
-        //get the position with custom listener
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null); // Setup interval update
-
-        //add listener on marker
-        mMap.setOnMarkerClickListener(this);
-
     }
 
     private void CameraCenterOnPlayer(LatLng pos) {
@@ -130,7 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         /* Camera settings -> https://stackoverflow.com/questions/38323724/how-does-pok%C3%A8mon-go-uses-custom-google-map-using-google-map-api  */
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(pos)
-                .zoom(18)
+                .zoom(18)//18
                 .tilt(0)
                 .bearing(0)
                 .build();
@@ -177,7 +176,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         @Override
         public void onLocationResult(LocationResult locationResult) {
-
+            Log.i("DIM","Je passe ici");
             if (locationResult != null) {
 
                Location location = locationResult.getLastLocation();
@@ -208,6 +207,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     };
 
     // PERMISSION REQUEST
+    @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
 
@@ -222,7 +222,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    LoadMapData(); // permission granted
+                    mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null); // Setup interval update
+                    mMap.setOnMarkerClickListener(this);
+                    SocketManager.getInstance().GetAllHubs();
 
                 }
 
@@ -249,9 +251,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int whichButton) {
-
-                    Log.i("Alexis-MarkerClick", "User join this hub");
-
+                    for (Hub hub : mHubList) {
+                        if(marker.equals(hub.getmMarker()))
+                        {
+                            Log.i("DIM", "Hub to connect found");
+                            SocketManager.getInstance().ConnectToHub(hub.getId());
+                            break;
+                        }
+                    }
                 }
 
             });
@@ -272,5 +279,234 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         return false;
+    }
+
+    @Override
+    public void onAPIDisconnection(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onUserDisconnection(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onAPIConnection() {
+
+    }
+
+    @Override
+    public void onUserConnectionSuccess() {
+
+    }
+
+    @Override
+    public void onUserConnectionFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onUserReconnectionSuccess() {
+
+    }
+
+    @Override
+    public void onUserReconnectionFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onAccountCreationSuccess() {
+
+    }
+
+    @Override
+    public void onAccountCreationFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onLoggedAccountResultSucces(String p_ResultMessage) {
+
+    }
+
+    @Override
+    public void onLoggedAccountResultFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onCharacterCreationSuccess() {
+
+    }
+
+    @Override
+    public void onCharacterCreationFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onGetAllMyCharactersSuccess(List<Character> p_ListOfCharacters) {
+
+    }
+
+    @Override
+    public void onGetAllMyCharactersFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onCharacterSelectionSuccess(Character p_CurrentCharacter) {
+
+    }
+
+    @Override
+    public void onCharacterSelectionFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onGetCurrentCharacterSuccess(Character p_CurrentCharacter) {
+
+    }
+
+    @Override
+    public void onGetCurrentCharacterFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onGetAllHubsSuccess(List<Hub> p_HubsList) {
+        Log.i("DIM", "GetAllHubs Success : " + p_HubsList.size());
+        mHubList = p_HubsList;
+    }
+
+    @Override
+    public void onGetAllHubsFailed(String p_ErrorMsg) {
+        Log.i("DIM", "GetAllHubs Failed : " + p_ErrorMsg);
+        SocketManager.getInstance().GetAllHubs();
+    }
+
+    @Override
+    public void onConnectToHubSuccess(Hub p_Hub) {
+        Log.i("DIM", "Connect to Hub Success : " + p_Hub.getName());
+        Intent Hub = new Intent(MapsActivity.this, HubActivity.class);
+        startActivity(Hub);
+    }
+
+    @Override
+    public void onConnectToHubFailed(String p_ErrorMsg) {
+        Log.i("DIM", "Connect to Hub Failed : " + p_ErrorMsg);
+    }
+
+    @Override
+    public void onGetHubConnectedToSuccess(Hub p_Hub) {
+
+    }
+
+    @Override
+    public void onGetHubConnectedToFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onExitHubSuccess() {
+
+    }
+
+    @Override
+    public void onExitHubFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onCreateRoomSuccess() {
+
+    }
+
+    @Override
+    public void onCreateRoomFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onAddRoomToHub(Room p_Room) {
+
+    }
+
+    @Override
+    public void onRemoveRoomToHub(String p_RoomId) {
+
+    }
+
+    @Override
+    public void onJoinRoomSuccess() {
+
+    }
+
+    @Override
+    public void onJoinRoomFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onGetAllCharacterOfRoomSuccess(List<Character> p_CharacterList) {
+
+    }
+
+    @Override
+    public void onGetAllCharacterOfRoomFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onExitCurrentRoomSuccess() {
+
+    }
+
+    @Override
+    public void onExitCurrentRoomFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onLaunchFightSuccess() {
+
+    }
+
+    @Override
+    public void onLaunchFightFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onFightIsLaunched() {
+
+    }
+
+    @Override
+    public void onBossAttack(List<Character> p_CharacterList) {
+
+    }
+
+    @Override
+    public void onFightIsFinished(boolean p_Victory) {
+
+    }
+
+    @Override
+    public void onUseCharacterAbilitySuccess() {
+
+    }
+
+    @Override
+    public void onUseCharacterAbilityFailed(String p_ErrorMsg) {
+
+    }
+
+    @Override
+    public void onBossTakeDamage() {
+
     }
 }

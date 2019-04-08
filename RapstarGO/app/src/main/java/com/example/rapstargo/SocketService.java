@@ -1,4 +1,4 @@
-package com.example.tdufo.sockettry;
+package com.example.rapstargo;
 
 import android.app.Service;
 import android.content.Intent;

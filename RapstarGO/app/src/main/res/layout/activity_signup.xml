@@ -54,7 +54,7 @@
                 android:textSize="24sp" />
 
             <EditText
-                android:id="@+id/UsernameField"
+                android:id="@+id/UsernameFieldSignup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -79,7 +79,7 @@
                 android:textSize="24sp" />
 
             <EditText
-                android:id="@+id/PasswordField"
+                android:id="@+id/PasswordFieldSignup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -102,7 +102,7 @@
                 android:textSize="24sp" />
 
             <EditText
-                android:id="@+id/ConfirmPasswordField"
+                android:id="@+id/ConfirmPasswordFieldSignup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"

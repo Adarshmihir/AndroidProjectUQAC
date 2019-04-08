@@ -1,4 +1,4 @@
-package com.example.tdufo.sockettry;
+package com.example.rapstargo;
 
 public class Ability {
     private int id;

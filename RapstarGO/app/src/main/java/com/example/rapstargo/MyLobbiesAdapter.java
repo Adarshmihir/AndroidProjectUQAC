@@ -1,18 +1,21 @@
 package com.example.rapstargo;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
 
 public class MyLobbiesAdapter extends RecyclerView.Adapter<MyLobbiesAdapter.MyViewHolder> {
 
-    List<Lobby> lobbies;
+    List<Room> lobbies;
 
-    MyLobbiesAdapter(List<Lobby> lobbies) {
+    MyLobbiesAdapter(List<Room> lobbies) {
         this.lobbies = lobbies;
     }
 
@@ -28,6 +31,40 @@ public class MyLobbiesAdapter extends RecyclerView.Adapter<MyLobbiesAdapter.MyVi
         holder.display(lobbies.get(position));
     }
 
+    public void ChangeRoomList(List<Room> _newList)
+    {
+        lobbies.clear();
+        lobbies.addAll(_newList);
+        notifyDataSetChanged();
+    }
+
+    public void AddRoom(Room _newRoom)
+    {
+        List<Room> _temp = lobbies;
+        _temp.add(_newRoom);
+        ChangeRoomList(_temp);
+    }
+
+    public void RemoveRoom(String p_RoomId)
+    {
+        boolean b_Find = false;
+        Room _temp = new Room();
+        for(Room room : lobbies)
+        {
+            if(room.getId() == p_RoomId)
+            {
+                _temp = room;
+                b_Find = true;
+                break;
+            }
+        }
+        if(b_Find) {
+            List<Room> _tempList = lobbies;
+            _tempList.remove(_temp);
+            ChangeRoomList(_tempList);
+        }
+    }
+
     @Override
     public int getItemCount() {
         return lobbies.size();
@@ -36,17 +73,29 @@ public class MyLobbiesAdapter extends RecyclerView.Adapter<MyLobbiesAdapter.MyVi
     class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
         private TextView owner;
+        private Button But_join;
 
         MyViewHolder(View itemView) {
             super(itemView);
 
             name = itemView.findViewById(R.id.nameLobby);
             owner = itemView.findViewById(R.id.owner);
+            But_join = itemView.findViewById(R.id.Button_JoinLobby);
+
+
         }
 
-        void display(Lobby lobby) {
-            name.setText(lobby.getName());
-            owner.setText(lobby.getOwner());
+        void display(final Room lobby) {
+            name.setText(lobby.getId());
+            owner.setText(lobby.getUser_id_owner());
+
+            But_join.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i("DIM", "Lobby clicked id : " + lobby.getId());
+                    SocketManager.getInstance().JoinRoom(lobby.getId());
+                }
+            });
         }
     }
 }

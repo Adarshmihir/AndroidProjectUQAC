@@ -12,9 +12,9 @@ import java.util.List;
 
 public class MyPlayersAdapter extends RecyclerView.Adapter<MyPlayersAdapter.MyViewHolder> {
 
-    List<Player> players;
+    List<Character> players;
 
-    MyPlayersAdapter(List<Player> players) {
+    MyPlayersAdapter(List<Character> players) {
         this.players = players;
     }
 
@@ -23,6 +23,13 @@ public class MyPlayersAdapter extends RecyclerView.Adapter<MyPlayersAdapter.MyVi
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.player_item, parent, false);
         return new MyViewHolder(view);
+    }
+
+    public void ChangeCharacterList(List<Character> _newList)
+    {
+        players.clear();
+        players.addAll(_newList);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -39,7 +46,7 @@ public class MyPlayersAdapter extends RecyclerView.Adapter<MyPlayersAdapter.MyVi
         private TextView name;
         private TextView level;
         private TextView status;
-        private ProgressBar statusProgress;
+        //private ProgressBar statusProgress;
 
         MyViewHolder(View itemView) {
             super(itemView);
@@ -47,22 +54,22 @@ public class MyPlayersAdapter extends RecyclerView.Adapter<MyPlayersAdapter.MyVi
             name = itemView.findViewById(R.id.playerName);
             level = itemView.findViewById(R.id.playerLevel);
             status = itemView.findViewById(R.id.playerStatus);
-            statusProgress = itemView.findViewById(R.id.statusProgressBar);
+            //statusProgress = itemView.findViewById(R.id.statusProgressBar);
         }
 
-        void display(Player player) {
+        void display(Character player) {
             name.setText(player.getName());
-            level.setText(player.getLevel());
-            status.setText(player.getStatus());
+            level.setText( Integer.toString(player.getLevel()));
+            status.setText(player.getClass_name());
 
-            if(status.getText() == "Invited") {
+            /*if(status.getText() == "Invited") {
                 statusProgress.setVisibility(View.VISIBLE);
                 status.setTextColor(Color.RED);
             }
             else {
                 statusProgress.setVisibility(View.INVISIBLE);
                 status.setTextColor(Color.GREEN);
-            }
+            }*/
 
         }
     }

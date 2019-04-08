@@ -25,7 +25,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/connectedPlayersRecycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="242dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -54,6 +54,13 @@
         </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/Button_LaunchFight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Launch fight"
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/invitePlayersButton"
