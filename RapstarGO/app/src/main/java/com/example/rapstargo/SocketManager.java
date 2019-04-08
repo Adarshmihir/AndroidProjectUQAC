@@ -1,6 +1,7 @@
 package com.example.rapstargo;
 
 import android.util.Log;
+import android.util.LogPrinter;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
@@ -1198,21 +1199,26 @@ public class SocketManager {
                 String jsonOutput = body.getJSONArray("obj").toString();
                 Type listType = new TypeToken<List<Character>>(){}.getType();
                 List<Character> lCharacters = gson.fromJson(jsonOutput, listType);
-
-                for (Character _char : lCharacters)
-                {
-                    if(mCharacter.getId() == _char.getId())
+                try {
+                    for (Character _char : lCharacters)
                     {
-                        getmCharacter().setCurrent_life(_char.getCurrent_life());
-                        getmCharacter().setAlive(_char.isAlive());
-                        break;
+                        if(mCharacter.getId() == _char.getId())
+                        {
+                            getmCharacter().setCurrent_life(_char.getCurrent_life());
+                            getmCharacter().setAlive(_char.isAlive());
+                            break;
+                        }
                     }
+                } catch (Exception e)
+                {
+                    Log.i("DIM",e.toString());
                 }
+
                 try {
                     mCurrentActivity.onBossAttack(lCharacters);
                 } catch (Exception e)
                 {
-                    return;
+                    Log.i("DIM",e.toString());
                 }
             } catch (JSONException e) {
                 return;

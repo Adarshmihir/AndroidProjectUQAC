@@ -86,6 +86,14 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/LoginErrorTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#F00"
+                android:autoText="false"
+                android:text="" />
+
             <LinearLayout
                 android:layout_width="370dp"
                 android:layout_height="wrap_content"

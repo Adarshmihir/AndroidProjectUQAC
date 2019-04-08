@@ -28,8 +28,8 @@ public class FightActivity extends AppCompatActivity implements SocketEvent {
     TextView BossImage;
     private int attackCooldown0 = 2000; // 1 Second
     private int attackCooldown1 = 2000; // 1 Second
-    private float characterMaxHP = 2000; // 1 Second
-    private float BossMaxHP = 2000; // 1 Second
+    private float characterMaxHP = 150; // 1 Second
+    private float BossMaxHP = 500; // 1 Second
     private Handler cooldownHandler = new Handler();
     private Runnable resetFirstButton = new Runnable(){
         public void run() {
@@ -62,52 +62,85 @@ public class FightActivity extends AppCompatActivity implements SocketEvent {
         playerHpBar = findViewById(R.id.PlayerHealthBar);
         bossHpBar = findViewById(R.id.BossHealthBar);
         BossImage = findViewById(R.id.BossImage);
-
-        if(SocketManager.getInstance().getmCharacter().getAbilities().get(0) != null)
+        try {
+            if(SocketManager.getInstance().getmCharacter() != null )
+            {
+                if(SocketManager.getInstance().getmCharacter().getAbilities().size() >= 1 )
+                {
+                    attackCooldown0 = SocketManager.getInstance().getmCharacter().getAbilities().get(0).getCooldown();
+                }
+                if(SocketManager.getInstance().getmCharacter().getAbilities().size() >= 2 )
+                {
+                    attackCooldown1 = SocketManager.getInstance().getmCharacter().getAbilities().get(1).getCooldown();
+                }
+                characterMaxHP = 150;
+            }
+            if(SocketManager.getInstance().getmCurrentRoom() != null)
+            {
+                if(SocketManager.getInstance().getmCurrentRoom().getBoss() != null)
+                {
+                    BossMaxHP = SocketManager.getInstance().getmCurrentRoom().getBoss().getLife();
+                }
+            }
+        } catch (Exception e)
         {
-            attackCooldown0 = SocketManager.getInstance().getmCharacter().getAbilities().get(0).getCooldown();
+            Log.i("DIM", e.toString());
         }
-        if(SocketManager.getInstance().getmCharacter().getAbilities().get(1) != null)
-        {
-            attackCooldown1 = SocketManager.getInstance().getmCharacter().getAbilities().get(1).getCooldown();
-        }
-
-        characterMaxHP = SocketManager.getInstance().getmCharacter().getCurrent_life();
-        BossMaxHP = SocketManager.getInstance().getmCurrentRoom().getBoss().getLife();
-
 
 
 
     }
 
     public void firstButtonClick(View v){
-        if(!IsFinished)
-        {
-            Log.i("RPGO", "btn 1");
-            firstAttackButton.setEnabled(false);
-            firstAttackButton.setImageResource(R.drawable.attack_icon_inactive);
-            cooldownHandler.postAtTime(resetFirstButton, System.currentTimeMillis()+attackCooldown0);
-            if(SocketManager.getInstance().getmCharacter().getAbilities().get(0) != null)
+        try {
+            if(!IsFinished)
             {
-                SocketManager.getInstance().UseAbility(Integer.toString(SocketManager.getInstance().getmCharacter().getAbilities().get(0).getId()));
+                Log.i("RPGO", "btn 1");
+                firstAttackButton.setEnabled(false);
+                firstAttackButton.setImageResource(R.drawable.attack_icon_inactive);
+                cooldownHandler.postAtTime(resetFirstButton, System.currentTimeMillis()+attackCooldown0);
+                try {
+                    if(SocketManager.getInstance().getmCharacter().getAbilities().size() >= 1)
+                    {
+                        SocketManager.getInstance().UseAbility(Integer.toString(SocketManager.getInstance().getmCharacter().getAbilities().get(0).getId()));
+                    }
+                } catch (Exception e)
+                {
+                    Log.i("DIM", e.toString());
+                }
+                cooldownHandler.postDelayed(resetFirstButton, attackCooldown0);
             }
-            cooldownHandler.postDelayed(resetFirstButton, attackCooldown0);
+        } catch (Exception e)
+        {
+            Log.i("DIM", e.toString());
         }
+
     }
 
     public void secondButtonClick(View v){
-        if(!IsFinished)
-        {
-            Log.i("RPGO", "btn 2");
-            secondAttackButton.setEnabled(false);
-            secondAttackButton.setImageResource(R.drawable.heal_icon_inactive);
-            cooldownHandler.postAtTime(resetSecondButton, System.currentTimeMillis()+attackCooldown1);
-            if(SocketManager.getInstance().getmCharacter().getAbilities().get(1) != null)
+        try {
+            if(!IsFinished)
             {
-                SocketManager.getInstance().UseAbility(Integer.toString(SocketManager.getInstance().getmCharacter().getAbilities().get(1).getId()));
+                Log.i("RPGO", "btn 2");
+                secondAttackButton.setEnabled(false);
+                secondAttackButton.setImageResource(R.drawable.heal_icon_inactive);
+                cooldownHandler.postAtTime(resetSecondButton, System.currentTimeMillis()+attackCooldown1);
+                try {
+                    if(SocketManager.getInstance().getmCharacter().getAbilities().size() >= 2)
+                    {
+                        SocketManager.getInstance().UseAbility(Integer.toString(SocketManager.getInstance().getmCharacter().getAbilities().get(1).getId()));
+                    }
+                } catch (Exception e)
+                {
+                    Log.i("DIM", e.toString());
+                }
+                cooldownHandler.postDelayed(resetSecondButton, attackCooldown1);
             }
-            cooldownHandler.postDelayed(resetSecondButton, attackCooldown1);
+        } catch (Exception e)
+        {
+            Log.i("DIM", e.toString());
         }
+
     }
 
     @Override
@@ -324,33 +357,54 @@ public class FightActivity extends AppCompatActivity implements SocketEvent {
 
     @Override
     public void onBossAttack(List<Character> p_CharacterList) {
-        int progress = (int)(((float)SocketManager.getInstance().getmCharacter().getCurrent_life()/(float) characterMaxHP)*100);
-        playerHpBar.setProgress(progress, true);
+        Log.i("DIM", "I take damage");
+        if(SocketManager.getInstance().getmCharacter() != null)
+        {
+            float divid = SocketManager.getInstance().getmCharacter().getCurrent_life()/ characterMaxHP;
+            int progress = (int)(divid*100);
+            Log.i("DIM", "Divid : " + divid + " pourcent : " + progress);
+        }
+
+        try {
+
+            int progress = (int)(((float)SocketManager.getInstance().getmCharacter().getCurrent_life()/(float) characterMaxHP)*100);
+            playerHpBar.setProgress(progress, true);
+        } catch (Exception e)
+        {
+            Log.i("DIM", e.toString());
+        }
+
     }
 
     @Override
     public void onFightIsFinished(boolean p_Victory) {
-        IsFinished = true;
-        if(p_Victory)
-        {
-            bossHpBar.setProgress(0, true);
-            Context context = getApplicationContext();
-            CharSequence text = "Win!";
-            BossImage.setText(text);
-            int duration = Toast.LENGTH_SHORT;
+        try {
+            IsFinished = true;
+            if(p_Victory)
+            {
+                bossHpBar.setProgress(0, true);
+                Context context = getApplicationContext();
+                CharSequence text = "Win!";
+                BossImage.setText(text);
+                int duration = Toast.LENGTH_SHORT;
 
-            Toast toast = Toast.makeText(this, text, duration);
-            toast.show();
-        } else
-        {
-            Context context = getApplicationContext();
-            CharSequence text = "Lose!";
-            BossImage.setText(text);
-            int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(this, text, duration);
+                toast.show();
+            } else
+            {
+                Context context = getApplicationContext();
+                CharSequence text = "Lose!";
+                BossImage.setText(text);
+                int duration = Toast.LENGTH_SHORT;
 
-            Toast toast = Toast.makeText(this, text, duration);
-            toast.show();
+                Toast toast = Toast.makeText(this, text, duration);
+                toast.show();
+            }
+        } catch (Exception e)
+        {
+            Log.i("DIM", e.toString());
         }
+
 
 
     }
@@ -367,7 +421,13 @@ public class FightActivity extends AppCompatActivity implements SocketEvent {
 
     @Override
     public void onBossTakeDamage() {
-        int progress = (int)(((float)SocketManager.getInstance().getmCurrentRoom().getBoss().getLife()/(float) BossMaxHP)*100);
-        bossHpBar.setProgress(progress, true);
+        try {
+            int progress = (int)(((float)SocketManager.getInstance().getmCurrentRoom().getBoss().getLife()/(float) BossMaxHP)*100);
+            bossHpBar.setProgress(progress, true);
+        } catch (Exception e)
+        {
+            Log.i("DIM", e.toString());
+        }
+
     }
 }

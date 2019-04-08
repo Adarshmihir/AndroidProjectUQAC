@@ -59,13 +59,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SocketManager.getInstance().mCurrentActivity = this;
 
         // FusedLocationClient configuration
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getApplicationContext());
 
         // Location Request configuration
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY); // need it for GPS usage
         mLocationRequest.setInterval(5000); // 10 seconds interval maximum
-        mLocationRequest.setSmallestDisplacement(1.f); // need 10 meters movement for update
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setSmallestDisplacement(0.f); // need 10 meters movement for update
+
 
         // userLocation initialisation
         userLocation = new Location("");
@@ -109,7 +111,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setRotateGesturesEnabled(true);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+
             //LoadMapData();
+            Log.i("DIM","Je passe if");
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null); // Setup interval update
             mMap.setOnMarkerClickListener(this);
             SocketManager.getInstance().GetAllHubs();
@@ -139,34 +144,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void HubMarker() {
+        Log.i("DIM","Je passe HubMarker nb : "+mHubList.size());
+        //Place marker for all hub
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int nbVisibleHub = 0;
+                for (Hub hub : mHubList) {
 
-        //Place marker for all hubs
-        int nbVisibleHub = 0;
+                    Log.i("DIM", hub.getLocation().toString() );
 
-        for (Hub hub : mHubList) {
+                    LatLng hubPos = new LatLng(hub.getLocation().getLatitude(), hub.getLocation().getLongitude());
+                    try
+                    {
+                        if(mMap.getProjection().getVisibleRegion().latLngBounds.contains(hubPos) && hub.getmMarker() == null) {
 
-            Log.i("Alexis-hubForeach", hub.getLocation().toString() );
+                            hub.setmMarker(mMap.addMarker(new MarkerOptions().position(hubPos).zIndex(1.0f)));
+                            nbVisibleHub++;
 
-            LatLng hubPos = new LatLng(hub.getLocation().getLatitude(), hub.getLocation().getLongitude());
+                        }
+                        else if(mMap.getProjection().getVisibleRegion().latLngBounds.contains(hubPos) && hub.getmMarker() != null) {
+                            nbVisibleHub++;
 
-            if(mMap.getProjection().getVisibleRegion().latLngBounds.contains(hubPos) && hub.getmMarker() == null) {
+                        }
+                        else if(!mMap.getProjection().getVisibleRegion().latLngBounds.contains(hubPos) && hub.getmMarker() != null) {
+                            hub.removeMarker();
 
-                hub.setmMarker(mMap.addMarker(new MarkerOptions().position(hubPos).zIndex(1.0f)));
-                nbVisibleHub++;
-
+                        }
+                    } catch (Exception e)
+                    {
+                        Log.i("DIM", e.toString() );
+                    }
+                }
+                Log.i("DIM", Integer.toString(nbVisibleHub));
             }
-            else if(mMap.getProjection().getVisibleRegion().latLngBounds.contains(hubPos) && hub.getmMarker() != null) {
-                nbVisibleHub++;
+        });
 
-            }
-            else if(!mMap.getProjection().getVisibleRegion().latLngBounds.contains(hubPos) && hub.getmMarker() != null) {
-                hub.removeMarker();
-
-            }
-
-        }
-
-        Log.i("Alexis-NbVisibleHub", Integer.toString(nbVisibleHub));
 
     }
 
@@ -176,7 +189,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         @Override
         public void onLocationResult(LocationResult locationResult) {
-            Log.i("DIM","Je passe ici");
+            super.onLocationResult(locationResult);
             if (locationResult != null) {
 
                Location location = locationResult.getLastLocation();
@@ -379,7 +392,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onGetAllHubsSuccess(List<Hub> p_HubsList) {
         Log.i("DIM", "GetAllHubs Success : " + p_HubsList.size());
-        mHubList = p_HubsList;
+        for (Hub hub : p_HubsList) {
+            Log.i("DIM","Test ");
+            mHubList.add(hub);
+        }
+        Log.i("DIM", "mHubList Success : " + mHubList.size());
+        HubMarker();
     }
 
     @Override

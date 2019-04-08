@@ -7,6 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -14,6 +17,7 @@ public class SigninActivity extends AppCompatActivity implements SocketEvent {
 
     private EditText loginText;
     private EditText passwordText;
+    private TextView LoginErrorTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +27,7 @@ public class SigninActivity extends AppCompatActivity implements SocketEvent {
 
         loginText = (EditText) findViewById(R.id.UsernameField);
         passwordText = (EditText) findViewById(R.id.PasswordField);
+        LoginErrorTxt = (TextView) findViewById(R.id.LoginErrorTxt);
 
         Button but_Connect = (Button) findViewById(R.id.signInButton);
         Button but_CreateAccount = (Button) findViewById(R.id.createAccountButton);
@@ -30,6 +35,7 @@ public class SigninActivity extends AppCompatActivity implements SocketEvent {
         but_Connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                LoginErrorTxt.setText("");
                 SocketManager.getInstance().Login(loginText.getText(),passwordText.getText());
             }
         });
@@ -56,6 +62,13 @@ public class SigninActivity extends AppCompatActivity implements SocketEvent {
     }
 
     @Override
+    protected void onDestroy() {
+        SocketManager.getInstance().ExitCurrentHub();
+        super.onDestroy();
+
+    }
+
+    @Override
     public void onAPIDisconnection(String p_ErrorMsg) {
 
     }
@@ -73,13 +86,15 @@ public class SigninActivity extends AppCompatActivity implements SocketEvent {
     @Override
     public void onUserConnectionSuccess() {
         Log.i("DIM", "Connection Success : " + SocketManager.getInstance().getmPseudo());
-        Intent Map = new Intent(SigninActivity.this, MapsActivity.class);
-        startActivity(Map);
+        SocketManager.getInstance().ExitCurrentHub();
+        SocketManager.getInstance().SelectCharacter(0);
+
     }
 
     @Override
     public void onUserConnectionFailed(String p_ErrorMsg) {
         Log.i("DIM", "Connection Failed : " + p_ErrorMsg);
+        LoginErrorTxt.setText(p_ErrorMsg);
     }
 
     @Override
@@ -134,12 +149,14 @@ public class SigninActivity extends AppCompatActivity implements SocketEvent {
 
     @Override
     public void onCharacterSelectionSuccess(Character p_CurrentCharacter) {
-
+        Log.i("DIM", "Connection Succes : " + p_CurrentCharacter.toString());
+        Intent Map = new Intent(SigninActivity.this, MapsActivity.class);
+        startActivity(Map);
     }
 
     @Override
     public void onCharacterSelectionFailed(String p_ErrorMsg) {
-
+        Log.i("DIM", "Connection Failed : " + p_ErrorMsg);
     }
 
     @Override

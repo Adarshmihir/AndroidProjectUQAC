@@ -25,16 +25,28 @@ public class LobbyActivity extends AppCompatActivity implements SocketEvent {
         connectedPlayers.add(new Player("Connected 2","Level 1", "Connected"));
         connectedPlayers.add(new Player("Connected 3","Level 666", "Connected"));
         connectedPlayers.add(new Player("Connected 4","Level 35", "Connected"));*/
-
-        Log.i("DIM", "Character List : " + SocketManager.getInstance().getmCurrentRoom().getCharacter_list().toString());
-
         RecyclerView mConnectedRecycler = findViewById(R.id.connectedPlayersRecycler);
+        MyPlayersAdapter connectedAdapter;
+        try
+        {
+            Log.i("DIM", "Character List : " + SocketManager.getInstance().getmCurrentRoom().getCharacter_list().toString());
 
-        MyPlayersAdapter connectedAdapter = new MyPlayersAdapter(SocketManager.getInstance().getmCurrentRoom().getCharacter_list());
+
+
+            connectedAdapter = new MyPlayersAdapter(SocketManager.getInstance().getmCurrentRoom().getCharacter_list());
+
+
+        } catch (Exception e)
+        {
+            List<Character> character_list = new ArrayList<Character>();
+            connectedAdapter = new MyPlayersAdapter(character_list);
+            Log.i("DIM",  e.toString());
+        }
 
         mConnectedRecycler.setLayoutManager(new LinearLayoutManager(getParent()));
 
         mConnectedRecycler.setAdapter(connectedAdapter);
+
 
         //*****Connected Players*****//
 
