@@ -152,8 +152,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 int nbVisibleHub = 0;
                 for (Hub hub : mHubList) {
 
-                    Log.i("DIM", hub.getLocation().toString() );
-
                     LatLng hubPos = new LatLng(hub.getLocation().getLatitude(), hub.getLocation().getLongitude());
                     try
                     {
@@ -176,7 +174,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Log.i("DIM", e.toString() );
                     }
                 }
-                Log.i("DIM", Integer.toString(nbVisibleHub));
             }
         });
 

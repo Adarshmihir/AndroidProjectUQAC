@@ -13,31 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HubActivity extends AppCompatActivity implements SocketEvent {
+    RecyclerView mRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hub);
         SocketManager.getInstance().mCurrentActivity = this;
 
-        RecyclerView mRecyclerView = findViewById(R.id.recyclerViewHub);
-
-        /*List<Lobby> lobbies = new ArrayList<>();
-
-        lobbies.add(new Lobby("Lobby1","Owner1"));
-        lobbies.add(new Lobby("Lobby2","Owner2"));
-        lobbies.add(new Lobby("Lobby3","Owner3"));
-        lobbies.add(new Lobby("Lobby4","Owner4"));
-        lobbies.add(new Lobby("Lobby5","Owner5"));
-        lobbies.add(new Lobby("Lobby6","Owner6"));
-        lobbies.add(new Lobby("Lobby7","Owner7"));
-        lobbies.add(new Lobby("Lobby8","Owner8"));
-        lobbies.add(new Lobby("Lobby9","Owner9"));
-        lobbies.add(new Lobby("Lobby10","Owner10"));
-        lobbies.add(new Lobby("Lobby11","Owner11"));
-        lobbies.add(new Lobby("Lobby12","Owner12"));
-        lobbies.add(new Lobby("Lobby13","Owner13"));
-        lobbies.add(new Lobby("Lobby14","Owner14"));
-        lobbies.add(new Lobby("Lobby15","Owner15"));*/
+        mRecyclerView = findViewById(R.id.recyclerViewHub);
 
         MyLobbiesAdapter adapter = new MyLobbiesAdapter(SocketManager.getInstance().getmCurrentHub().getRooms_list());
 
@@ -221,17 +205,27 @@ public class HubActivity extends AppCompatActivity implements SocketEvent {
     }
 
     @Override
-    public void onAddRoomToHub(Room p_Room) {
-        Log.i("DIM", "AddRoom Success : " + p_Room.toString());
-        RecyclerView mConnectedRecycler = findViewById(R.id.recyclerViewHub);
-        ((MyLobbiesAdapter)mConnectedRecycler.getAdapter()).AddRoom(p_Room);
+    public void onAddRoomToHub(final Room p_Room) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("DIM", "AddRoom Success : " + p_Room.toString());
+                ((MyLobbiesAdapter)mRecyclerView.getAdapter()).AddRoom(p_Room);
+            }
+        });
+
     }
 
     @Override
-    public void onRemoveRoomToHub(String p_RoomId) {
-        Log.i("DIM", "RemoveRoom Success : " + p_RoomId);
-        RecyclerView mConnectedRecycler = findViewById(R.id.recyclerViewHub);
-        ((MyLobbiesAdapter)mConnectedRecycler.getAdapter()).RemoveRoom(p_RoomId);
+    public void onRemoveRoomToHub(final String p_RoomId) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("DIM", "RemoveRoom Success : " + p_RoomId);
+                ((MyLobbiesAdapter)mRecyclerView.getAdapter()).RemoveRoom(p_RoomId);
+            }
+        });
     }
 
     @Override

@@ -33,8 +33,9 @@ public class MyLobbiesAdapter extends RecyclerView.Adapter<MyLobbiesAdapter.MyVi
 
     public void ChangeRoomList(List<Room> _newList)
     {
-        lobbies.clear();
-        lobbies.addAll(_newList);
+        Log.i("DIM", "AllNewRooms : " + _newList.toString());
+        lobbies = _newList;
+        Log.i("DIM", "AllRooms : " + lobbies.toString());
         notifyDataSetChanged();
     }
 
@@ -43,24 +44,32 @@ public class MyLobbiesAdapter extends RecyclerView.Adapter<MyLobbiesAdapter.MyVi
         List<Room> _temp = lobbies;
         _temp.add(_newRoom);
         ChangeRoomList(_temp);
+
+        //notifyDataSetChanged();
     }
 
     public void RemoveRoom(String p_RoomId)
     {
         boolean b_Find = false;
+        List<Room> _tempList = lobbies;
+        Log.i("DIM", "Remove : " + _tempList.toString());
         Room _temp = new Room();
-        for(Room room : lobbies)
+
+        for(Room room : _tempList)
         {
-            if(room.getId() == p_RoomId)
+            Log.i("DIM", "TestRoom : " + room.getId() + " == " + p_RoomId);
+            if(room.getId().equals(p_RoomId))
             {
+                Log.i("DIM", "Test est passé");
                 _temp = room;
                 b_Find = true;
                 break;
             }
         }
         if(b_Find) {
-            List<Room> _tempList = lobbies;
             _tempList.remove(_temp);
+            Log.i("DIM", "RemoveFind : " + _tempList.toString());
+
             ChangeRoomList(_tempList);
         }
     }

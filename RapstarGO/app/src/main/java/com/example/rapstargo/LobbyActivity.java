@@ -276,10 +276,15 @@ public class LobbyActivity extends AppCompatActivity implements SocketEvent {
     }
 
     @Override
-    public void onGetAllCharacterOfRoomSuccess(List<Character> p_CharacterList) {
-        Log.i("DIM", "GetAllCharacterOfRoom Success : " + p_CharacterList.toString());
-        RecyclerView mConnectedRecycler = findViewById(R.id.connectedPlayersRecycler);
-        ((MyPlayersAdapter)mConnectedRecycler.getAdapter()).ChangeCharacterList(p_CharacterList);
+    public void onGetAllCharacterOfRoomSuccess(final List<Character> p_CharacterList) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("DIM", "GetAllCharacterOfRoom Success : " + p_CharacterList.toString());
+                RecyclerView mConnectedRecycler = findViewById(R.id.connectedPlayersRecycler);
+                ((MyPlayersAdapter)mConnectedRecycler.getAdapter()).ChangeCharacterList(p_CharacterList);
+            }
+        });
         /*List<Player> connectedPlayers = new ArrayList<>();
 
         connectedPlayers.add(new Player("Connected 1","Level 42", "Connected"));
