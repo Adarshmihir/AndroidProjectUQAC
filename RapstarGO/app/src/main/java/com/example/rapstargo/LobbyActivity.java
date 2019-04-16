@@ -106,8 +106,8 @@ public class LobbyActivity extends AppCompatActivity implements SocketEvent {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         SocketManager.getInstance().ExitCurrentRoom();
+        super.onDestroy();
     }
 
     @Override

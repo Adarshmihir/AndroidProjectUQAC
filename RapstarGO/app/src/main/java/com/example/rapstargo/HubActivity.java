@@ -21,14 +21,6 @@ public class HubActivity extends AppCompatActivity implements SocketEvent {
         setContentView(R.layout.activity_hub);
         SocketManager.getInstance().mCurrentActivity = this;
 
-        mRecyclerView = findViewById(R.id.recyclerViewHub);
-
-        MyLobbiesAdapter adapter = new MyLobbiesAdapter(SocketManager.getInstance().getmCurrentHub().getRooms_list());
-
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getParent()));
-
-        mRecyclerView.setAdapter(adapter);
-
         Button button_CreateRoom = (Button) findViewById(R.id.button_CreateRoom);
 
         button_CreateRoom.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +52,14 @@ public class HubActivity extends AppCompatActivity implements SocketEvent {
     protected void onResume() {
         super.onResume();
         SocketManager.getInstance().mCurrentActivity = this;
+
+        mRecyclerView = findViewById(R.id.recyclerViewHub);
+
+        MyLobbiesAdapter adapter = new MyLobbiesAdapter(SocketManager.getInstance().getmCurrentHub().getRooms_list());
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getParent()));
+
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ public class SignupActivity extends AppCompatActivity implements SocketEvent {
     private EditText loginText;
     private EditText passwordText;
     private EditText passwordCheckText;
+
+    private TextView loginErrorTxt2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +29,24 @@ public class SignupActivity extends AppCompatActivity implements SocketEvent {
         passwordText = (EditText) findViewById(R.id.PasswordFieldSignup);
         passwordCheckText = (EditText) findViewById(R.id.ConfirmPasswordFieldSignup);
 
-        Button but_SignUp = (Button) findViewById(R.id.signUpButton);
+        loginErrorTxt2 = (TextView) findViewById(R.id.loginErrorTxt2);
+
+        final Button but_SignUp = (Button) findViewById(R.id.signUpButton);
+        but_SignUp.setVisibility(View.VISIBLE);
+
+
 
         but_SignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        but_SignUp.setVisibility(View.GONE);
+                        loginErrorTxt2.setText("");
+                    }
+                });
+
                 if(passwordText.getText().toString().equals(passwordCheckText.getText().toString()))
                 {
                     SocketManager.getInstance().CreateAccount(loginText.getText(),passwordText.getText());
@@ -51,6 +67,8 @@ public class SignupActivity extends AppCompatActivity implements SocketEvent {
     protected void onResume() {
         super.onResume();
         SocketManager.getInstance().mCurrentActivity = this;
+        final Button but_SignUp = (Button) findViewById(R.id.signUpButton);
+        but_SignUp.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -98,6 +116,15 @@ public class SignupActivity extends AppCompatActivity implements SocketEvent {
     @Override
     public void onAccountCreationFailed(String p_ErrorMsg) {
         Log.i("DIM", "SignUp failed : " + p_ErrorMsg);
+        loginErrorTxt2.setText(p_ErrorMsg);
+
+        final Button but_SignUp = (Button) findViewById(R.id.signUpButton);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                but_SignUp.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override

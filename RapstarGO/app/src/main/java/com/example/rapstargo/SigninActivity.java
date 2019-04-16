@@ -29,13 +29,19 @@ public class SigninActivity extends AppCompatActivity implements SocketEvent {
         passwordText = (EditText) findViewById(R.id.PasswordField);
         LoginErrorTxt = (TextView) findViewById(R.id.LoginErrorTxt);
 
-        Button but_Connect = (Button) findViewById(R.id.signInButton);
+        final Button but_Connect = (Button) findViewById(R.id.signInButton);
         Button but_CreateAccount = (Button) findViewById(R.id.createAccountButton);
 
         but_Connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LoginErrorTxt.setText("");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        but_Connect.setVisibility(View.GONE);
+                    }
+                });
                 SocketManager.getInstance().Login(loginText.getText(),passwordText.getText());
             }
         });
@@ -59,6 +65,8 @@ public class SigninActivity extends AppCompatActivity implements SocketEvent {
     protected void onResume() {
         super.onResume();
         SocketManager.getInstance().mCurrentActivity = this;
+        final Button but_Connect = (Button) findViewById(R.id.signInButton);
+        but_Connect.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -93,6 +101,13 @@ public class SigninActivity extends AppCompatActivity implements SocketEvent {
 
     @Override
     public void onUserConnectionFailed(String p_ErrorMsg) {
+        final Button but_Connect = (Button) findViewById(R.id.signInButton);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                but_Connect.setVisibility(View.VISIBLE);
+            }
+        });
         Log.i("DIM", "Connection Failed : " + p_ErrorMsg);
         LoginErrorTxt.setText(p_ErrorMsg);
     }
