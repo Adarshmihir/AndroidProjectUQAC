@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ public class FightActivity extends AppCompatActivity implements SocketEvent {
     ProgressBar bossHpBar;
     boolean IsFinished;
 
+    LinearLayout playerList;
 
 
     TextView BossImage;
@@ -42,7 +44,7 @@ public class FightActivity extends AppCompatActivity implements SocketEvent {
     private Runnable resetSecondButton = new Runnable(){
         public void run() {
             secondAttackButton.setEnabled(true);
-            secondAttackButton.setImageResource(R.drawable.heal_icon);
+            secondAttackButton.setImageResource(R.drawable.hache);
             Log.i("RPGO", "btn 2 reset");
         }
     };
@@ -61,7 +63,24 @@ public class FightActivity extends AppCompatActivity implements SocketEvent {
 
         playerHpBar = findViewById(R.id.PlayerHealthBar);
         bossHpBar = findViewById(R.id.BossHealthBar);
-        BossImage = findViewById(R.id.BossImage);
+        BossImage = findViewById(R.id.BossHPText);
+
+        playerList = findViewById(R.id.OtherPlayersList);
+
+        try{
+            if(SocketManager.getInstance().getmCurrentRoom().getCharacter_list().size()>0){
+                for (Character _char : SocketManager.getInstance().getmCurrentRoom().getCharacter_list()){
+                    TextView playerView = new TextView(this,null,R.style.otherplayers);
+                    playerView.setText(_char.getName()+"     ");
+                    playerList.addView(playerView);
+                }
+
+            }
+
+        }catch (Exception e){
+            Log.i("Room", e.toString());
+        }
+
         try {
             if(SocketManager.getInstance().getmCharacter() != null )
             {
@@ -123,7 +142,7 @@ public class FightActivity extends AppCompatActivity implements SocketEvent {
             {
                 Log.i("RPGO", "btn 2");
                 secondAttackButton.setEnabled(false);
-                secondAttackButton.setImageResource(R.drawable.heal_icon_inactive);
+                secondAttackButton.setImageResource(R.drawable.hache_inactive);
                 cooldownHandler.postAtTime(resetSecondButton, System.currentTimeMillis()+attackCooldown1);
                 try {
                     if(SocketManager.getInstance().getmCharacter().getAbilities().size() >= 2)

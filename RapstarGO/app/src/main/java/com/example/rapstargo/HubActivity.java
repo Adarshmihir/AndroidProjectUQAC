@@ -210,8 +210,9 @@ public class HubActivity extends AppCompatActivity implements SocketEvent {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.i("DIM", "AddRoom Success : " + p_Room.toString());
-                ((MyLobbiesAdapter)mRecyclerView.getAdapter()).AddRoom(p_Room);
+                Log.i("Room", "AddRoom Success : " + p_Room.toString());
+                //((MyLobbiesAdapter)mRecyclerView.getAdapter()).AddRoom(p_Room);
+                ((MyLobbiesAdapter)mRecyclerView.getAdapter()).ChangeRoomList(SocketManager.getInstance().getmCurrentHub().getRooms_list());
             }
         });
 
@@ -222,22 +223,22 @@ public class HubActivity extends AppCompatActivity implements SocketEvent {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.i("DIM", "RemoveRoom Success : " + p_RoomId);
-                ((MyLobbiesAdapter)mRecyclerView.getAdapter()).RemoveRoom(p_RoomId);
+                Log.i("Room", "RemoveRoom Success : " + p_RoomId);
+                ((MyLobbiesAdapter)mRecyclerView.getAdapter()).ChangeRoomList(SocketManager.getInstance().getmCurrentHub().getRooms_list());
             }
         });
     }
 
     @Override
     public void onJoinRoomSuccess() {
-        Log.i("DIM", "JoinRoom success : " + SocketManager.getInstance().getmCurrentRoom().toString());
+        Log.i("Room", "JoinRoom success : " + SocketManager.getInstance().getmCurrentRoom().toString());
         Intent Lobby = new Intent(HubActivity.this, LobbyActivity.class);
         startActivity(Lobby);
     }
 
     @Override
     public void onJoinRoomFailed(String p_ErrorMsg) {
-        Log.i("DIM", "JoinRoom Failed : " + p_ErrorMsg);
+        Log.i("Room", "JoinRoom Failed : " + p_ErrorMsg);
     }
 
     @Override

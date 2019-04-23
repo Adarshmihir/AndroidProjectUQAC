@@ -81,23 +81,19 @@ public class MyLobbiesAdapter extends RecyclerView.Adapter<MyLobbiesAdapter.MyVi
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
-        private TextView owner;
         private Button But_join;
 
         MyViewHolder(View itemView) {
             super(itemView);
 
             name = itemView.findViewById(R.id.nameLobby);
-            owner = itemView.findViewById(R.id.owner);
             But_join = itemView.findViewById(R.id.Button_JoinLobby);
 
 
         }
 
         void display(final Room lobby) {
-            name.setText(lobby.getId());
-            owner.setText(lobby.getUser_id_owner());
-
+            name.setText(lobby.getName());
             But_join.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

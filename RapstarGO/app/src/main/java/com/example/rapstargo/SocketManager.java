@@ -967,12 +967,15 @@ public class SocketManager {
             try {
                 isSuccess = data.getBoolean("success");
                 body = data.getJSONObject("body");
+
                 if(isSuccess)
                 {
                     try {
+                        Log.i("Room", "handleCreateRoomResult success");
                         mCurrentActivity.onCreateRoomSuccess();
                     } catch (Exception e)
                     {
+                        Log.i("Room", "handleCreateRoomResult exception : " + e);
                         return;
                     }
                 } else {
@@ -1001,6 +1004,7 @@ public class SocketManager {
                     Type listType = new TypeToken<Room>(){}.getType();
                     Room lRoom = gson.fromJson(jsonOutput, listType);
                     Log.i("DIM", lRoom.toString());
+                    mCurrentHub.AddRoom(lRoom);
                     mCurrentActivity.onAddRoomToHub(lRoom);
                 } catch (Exception e)
                 {
@@ -1020,6 +1024,7 @@ public class SocketManager {
             try {
                 body = data.getJSONObject("body");
                 try {
+                    mCurrentHub.RemoveRoom(body.getString("room_id"));
                     mCurrentActivity.onRemoveRoomToHub(body.getString("room_id"));
                 } catch (Exception e)
                 {
@@ -1041,6 +1046,7 @@ public class SocketManager {
             try {
                 isSuccess = data.getBoolean("success");
                 body = data.getJSONObject("body");
+
                 if(isSuccess)
                 {
                     Gson gson = new Gson();
@@ -1052,13 +1058,16 @@ public class SocketManager {
                         setmCurrentRoom(lRoom);
                     }
                     try {
+                        Log.i("Room", "handleJoinRoomResult success " );
                         mCurrentActivity.onJoinRoomSuccess();
                     } catch (Exception e)
                     {
+                        Log.i("Room", "handleCreateRoomResult exception : " + e);
                         return;
                     }
                 } else {
                     try {
+
                         mCurrentActivity.onJoinRoomFailed(body.getString("message"));
                     } catch (Exception e) {
                         return;
@@ -1073,6 +1082,7 @@ public class SocketManager {
     private Emitter.Listener handleGetAllUserOfRoom = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
+            Log.i("Room", "handleGetAllUserOfRoom  ");
             JSONObject data = (JSONObject) args[0];
             boolean isSuccess;
             JSONObject body;

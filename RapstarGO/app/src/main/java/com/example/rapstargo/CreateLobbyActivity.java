@@ -177,13 +177,13 @@ public class CreateLobbyActivity extends AppCompatActivity implements SocketEven
 
     @Override
     public void onCreateRoomSuccess() {
-        Log.i("DIM", "CreateRoom Success : " + SocketManager.getInstance().getmCurrentRoom().toString());
+        Log.i("Room", "CreateRoom Success : " + SocketManager.getInstance().getmCurrentRoom().toString());
 
     }
 
     @Override
     public void onCreateRoomFailed(String p_ErrorMsg) {
-        Log.i("DIM", "CreateRoom Failed : " + p_ErrorMsg);
+        Log.i("Room", "CreateRoom Failed : " + p_ErrorMsg);
     }
 
     @Override
@@ -198,14 +198,14 @@ public class CreateLobbyActivity extends AppCompatActivity implements SocketEven
 
     @Override
     public void onJoinRoomSuccess() {
-        Log.i("DIM", "JoinRoom success : " + SocketManager.getInstance().getmCurrentRoom().toString());
+        Log.i("Room", "JoinRoom success : " + SocketManager.getInstance().getmCurrentRoom().toString());
         Intent Lobby = new Intent(CreateLobbyActivity.this, LobbyActivity.class);
         startActivity(Lobby);
     }
 
     @Override
     public void onJoinRoomFailed(String p_ErrorMsg) {
-        Log.i("DIM", "JoinRoom Failed : " + p_ErrorMsg);
+        Log.i("Room", "JoinRoom Failed : " + p_ErrorMsg);
     }
 
     @Override

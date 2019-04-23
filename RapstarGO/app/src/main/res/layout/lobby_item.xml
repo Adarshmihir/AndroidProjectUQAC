@@ -14,15 +14,6 @@
         android:textSize="24sp"
         android:textStyle="bold|italic" />
 
-    <TextView
-        android:id="@+id/owner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Owner"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="18sp" />
-
     <Button
         android:id="@+id/Button_JoinLobby"
         android:layout_width="match_parent"

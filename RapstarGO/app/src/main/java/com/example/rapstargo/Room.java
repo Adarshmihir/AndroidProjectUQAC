@@ -1,5 +1,7 @@
 package com.example.rapstargo;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,10 +10,12 @@ public class Room {
     private String user_id_owner;
     private List<String> user_list;
     private Boss boss;
+    private String name;
     private List<Character> character_list;
 
     public Room() {
         user_list = new ArrayList<String>();
+        character_list = new ArrayList<Character>();
     }
 
     public String getId() {
@@ -20,6 +24,14 @@ public class Room {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUser_id_owner() {
@@ -48,7 +60,22 @@ public class Room {
 
     @Override
     public String toString() {
-        return getId() + " " + getUser_id_owner() + " nbUser " + getUser_list().size();
+        /*String RoomName = getId() + " " + getUser_id_owner() + " nbUser " + getUser_list().size();
+        Log.i("Room", character_list.toString() );
+        if(character_list.size() > 0)
+        {
+            for (Character _Char: character_list ) {
+                Log.i("Room", _Char.toString() );
+                Log.i("Room", "Test : " + _Char.getUser_id() + " == " + user_id_owner);
+                if(_Char.getUser_id().equals(user_id_owner))
+                {
+                    Log.i("Room", "Good char" );
+                    RoomName = "Room of " + _Char.getName();
+                }
+            }
+        }*/
+
+        return getName();
     }
 
     public List<Character> getCharacter_list() {

@@ -109,7 +109,7 @@ public class SignupActivity extends AppCompatActivity implements SocketEvent {
     @Override
     public void onAccountCreationSuccess() {
         Log.i("DIM", "SignUp Success : " + SocketManager.getInstance().getmPseudo());
-        SocketManager.getInstance().CreateCharacter("Hero","0");
+        SocketManager.getInstance().CreateCharacter(SocketManager.getInstance().getmPseudo() + "Hero","0");
 
     }
 

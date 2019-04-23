@@ -33,40 +33,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/invitedPlayersLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:text="Invited Players"
-            android:textSize="30sp" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/invitedPlayersRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:clickable="false">
-
-        </android.support.v7.widget.RecyclerView>
-
-    </LinearLayout>
+        android:orientation="vertical"/>
 
     <Button
         android:id="@+id/Button_LaunchFight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Launch fight"
-        android:textSize="24sp" />
-
-    <Button
-        android:id="@+id/invitePlayersButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Invite Players"
         android:textSize="24sp" />
 
 </LinearLayout>

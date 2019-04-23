@@ -1,5 +1,7 @@
 package com.example.rapstargo;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
@@ -79,5 +81,31 @@ public class Hub {
     @Override
     public String toString() {
         return "id : " + getId() + " Nom : " + getName() + " Location : " + location.toString() + " nbRoom = " + getRooms_list().toString();
+    }
+
+    void AddRoom(Room _room)
+    {
+        rooms_list.add(_room);
+    }
+
+    void RemoveRoom(String p_RoomId)
+    {
+        boolean b_Find = false;
+        List<Room> _tempList = rooms_list;
+        Room _temp = new Room();
+
+        for(Room room : _tempList)
+        {
+            if(room.getId().equals(p_RoomId))
+            {
+                Log.i("DIM", "Test est passé");
+                _temp = room;
+                b_Find = true;
+                break;
+            }
+        }
+        if(b_Find) {
+            rooms_list.remove(_temp);
+        }
     }
 }
